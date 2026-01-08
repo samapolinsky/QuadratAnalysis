@@ -18,16 +18,18 @@ app.add_middleware(
 )
 
 @app.post("/crop-quadrat")
-async def crop_quadrat(image: UploadFile = File(...), points: str = Form(...)):
+async def crop_quadrat(image: UploadFile = File(...), points: str = Form(...), name: str = Form(...)):
     image_bytes = await image.read()
     pts = json.loads(points)
 
-    result = crop_quadrat_from_points(image_bytes, pts)
+    crop_result = crop_quadrat_from_points(image_bytes, pts)
 
-    get_images_from_crop(result["cropped_image"], result["context_image"], 0)
+    ai_result = get_images_from_crop(crop_result["cropped_image"], crop_result["context_image"], name)
+    # print(ai_result)
 
     return {
-        "cropped_image": base64.b64encode(result["cropped_image"]).decode(),
-        "context_image": base64.b64encode(result["context_image"]).decode(),
-        "corners": pts
+        "cropped_image": base64.b64encode(crop_result["cropped_image"]).decode(),
+        "context_image": base64.b64encode(crop_result["context_image"]).decode(),
+        "corners": pts,
+        "ai_result": ai_result
     }
