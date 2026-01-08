@@ -1,0 +1,39 @@
+.header-content {
+    max-width: 1400px;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 4px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 10px;
+}
+
+body {
+    background: #f6f7f9;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #222;
+}
+

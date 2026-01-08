@@ -1,10 +1,11 @@
+import csv
+import os
 from fastapi import FastAPI, UploadFile, File, Form
 import json
 from fastapi.middleware.cors import CORSMiddleware
 from quadrat_crop import crop_quadrat_from_points
 from openai_context import get_images_from_crop
 import base64
-from openai import OpenAI
 
 app = FastAPI()
 
@@ -33,3 +34,16 @@ async def crop_quadrat(image: UploadFile = File(...), points: str = Form(...), n
         "corners": pts,
         "ai_result": ai_result
     }
+
+CSV_PATH = "./quadrat_data.csv"
+
+@app.get("/api/quadrat-data")
+def get_quadrat_data():
+    if not os.path.exists(CSV_PATH):
+        return {"data": []}
+
+    with open(CSV_PATH, newline="") as f:
+        reader = csv.DictReader(f)
+        data = [row for row in reader]
+
+    return {"data": data}

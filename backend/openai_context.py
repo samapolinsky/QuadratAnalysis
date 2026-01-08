@@ -158,7 +158,7 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
         pct_key = f"{species}_pct"
         conf_key = f"{species}_conf"
         if row_to_ret[pct_key] != 0:
-            return_list.append(f"{species}: {row_to_ret[pct_key]}, Confidence: {row_to_ret[conf_key]}")
+            return_list.append(f"{species}: {row_to_ret[pct_key]}%, Confidence: {row_to_ret[conf_key]}")
 
     for other_species in OTHER_SPECIES:
         ct_key = f"{other_species}_ct"
