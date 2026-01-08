@@ -53,21 +53,6 @@ if len(contours) > 4:
 if len(contours) != 4:
     raise RuntimeError(f"Expected 4 red dots, found {len(contours)}")
 
-# if not contours:
-#     raise RuntimeError("No red dots found")
-#
-# print(len(contours))
-# if len(contours) > 4:
-#     contours = [c for c in contours if cv2.contourArea(c) > 100]
-
-# contours2 = []
-# if len(contours) > 4:
-#     for c in contours:
-#         if cv2.contourArea(c) > 100:
-#             contours2.append(c)
-#
-# print(contours2)
-
 if len(contours) < 4:
     raise RuntimeError(f"Expected 4 red dots, found {len(contours)}")
 
