@@ -1,0 +1,46 @@
+[
+    [
+        {
+            "type(s)": "live grass",
+            "percent_cover": 65,
+            "confidence": "medium",
+            "notes": "Green standing grass blades dominate projected area"
+        },
+        {
+            "type(s)": "dead grass",
+            "percent_cover": 10,
+            "confidence": "medium",
+            "notes": "Some brown/senesced grass blades interspersed with live grass"
+        },
+        {
+            "type(s)": "forb",
+            "percent_cover": 0,
+            "confidence": "high",
+            "notes": "No broadleaf forbs visible within quadrat"
+        },
+        {
+            "type(s)": "shrub",
+            "percent_cover": 0,
+            "confidence": "high",
+            "notes": "No woody shrubs present"
+        },
+        {
+            "type(s)": "leaf_litter",
+            "percent_cover": 5,
+            "confidence": "low",
+            "notes": "Small patches of dried leaves/thatched material on soil surface"
+        },
+        {
+            "type(s)": "bare_ground",
+            "percent_cover": 20,
+            "confidence": "medium",
+            "notes": "Exposed dark mud/soil between grass clumps"
+        },
+        {
+            "type(s)": "other",
+            "percent_cover": 0,
+            "confidence": "high",
+            "notes": "No other cover types evident"
+        }
+    ]
+]
