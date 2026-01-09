@@ -1,29 +1,51 @@
 import {useEffect, useRef, useState} from "react";
 import './App.css'
+import './App.jsx'
 import { RotatingLines } from "react-loader-spinner";
-import Table from "./Table.jsx";
 
-export default function MainPage() {
+export default function MainPage(props) {
     const canvasRef = useRef(null);
     const imgRef = useRef(null);
-    const [image, setImage] = useState(null);
-    const [points, setPoints] = useState([]);
-    const [result, setResult] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [done, setDone] = useState(false);
+    const { session, setSession } = props;
+    const { image, points, result, done, loading } = session;
+
+    useEffect(() => {
+        if (!session.image) return;
+
+        if (!imgRef.current) {
+            const img = new Image();
+            img.onload = () => {
+                imgRef.current = img;
+                drawCanvas(img, session.points);
+            };
+            img.src = URL.createObjectURL(session.image);
+            return;
+        }
+
+        drawCanvas(imgRef.current, session.points);
+    }, [session.image, session.points]);
 
     // load image
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        setDone(false);
+        setSession(prev => ({
+            ...prev,
+            done: false
+        }));
 
         const img = new Image();
         img.onload = () => {
             imgRef.current = img;
-            setImage(file);
-            setPoints([]);
+            setSession(prev => ({
+                ...prev,
+                image: file,
+                siteId: file.name,
+                points: [],
+                result: null,
+                done: false
+            }));
         };
         img.src = URL.createObjectURL(file);
     };
@@ -42,17 +64,16 @@ export default function MainPage() {
         ctx.fillStyle = "red";
         pts.forEach(([x, y]) => {
             ctx.beginPath();
-            ctx.arc(x, y, 6, 0, Math.PI * 2);
+            ctx.arc(x, y, 10, 0, Math.PI * 2);
             ctx.fill();
         });
     };
 
     const undoDot = () => {
-        setPoints(prev => {
-            const newPoints = prev.slice(0, -1); // remove last
-            redrawCanvas(newPoints);
-            return newPoints;
-        });
+        setSession(prev => ({
+            ...prev,
+            points: prev.points.slice(0, -1)
+        }));
     };
 
     const redrawCanvas = (pointsArray) => {
@@ -86,9 +107,10 @@ export default function MainPage() {
         const x = Math.round((e.clientX - rect.left) * scaleX);
         const y = Math.round((e.clientY - rect.top) * scaleY);
 
-        const newPoints = [...points, [x, y]];
-        setPoints(newPoints);
-        drawCanvas(imgRef.current, newPoints);
+        setSession(prev => ({
+            ...prev,
+            points: [...prev.points, [x, y]]
+        }));
     };
 
     // submit to backend
@@ -98,7 +120,10 @@ export default function MainPage() {
             return;
         }
 
-        setLoading(true);
+        setSession(prev => ({
+            ...prev,
+            loading: true
+        }))
 
         const form = new FormData();
         form.append("image", image);
@@ -114,26 +139,36 @@ export default function MainPage() {
             if (!res.ok) throw new Error("Server error");
 
             const data = await res.json();
-            setResult({
-                cropped: "data:image/png;base64," + data.cropped_image,
-                context: "data:image/png;base64," + data.context_image,
-                results: data.ai_result,
-            });
+            setSession(prev => ({
+                ...prev,
+                result: {
+                    cropped: "data:image/png;base64," + data.cropped_image,
+                    context: "data:image/png;base64," + data.context_image,
+                    results: data.ai_result,
+                },
+                done: true
+            }));
         } catch (error) {
             alert(error.message);
         } finally {
-            setLoading(false);
-            setDone(true);
+            setSession(prev => ({
+                ...prev,
+                loading: false
+            }))
         }
     };
 
-    // run whenever image or points change
-    useEffect(() => {
-        if (!image || !imgRef.current) return;
-        if (!canvasRef.current) return;
-
-        drawCanvas(imgRef.current, points);
-    }, [image, points]);
+    const refresh = () => {
+        setSession({
+            image: null,
+            points: [],
+            result: null,
+            done: false,
+            siteId: null,
+            loading: false
+        });
+        imgRef.current = null;
+    }
 
     return (
         <div className="page">
@@ -143,8 +178,8 @@ export default function MainPage() {
                 <div className="instructions">
                     <p>Use this app to analyze the land cover of quadrat images.</p>
                     <p><strong>1.</strong> Upload an image.</p>
-                    <p><strong>2.</strong> Click to place 4 red dots on the inner corners of the quadrat. If you mess up, press <strong>Undo Last Dot</strong>.</p>
-                    <p><strong>3.</strong> Click <strong>Crop Quadrat</strong> to run the model.</p>
+                    <p><strong>2.</strong> Click to place 4 red dots on the inner corners of the quadrat. If you mess up, press <strong>Undo Last Dot</strong>. This will help the model identify the bounds of the quadrat.</p>
+                    <p><strong>3.</strong> Click <strong>Crop and Analyze Quadrat</strong> to run the model. Do not click to the table until the model has finished running.</p>
                 </div>
 
                 <input
@@ -161,17 +196,14 @@ export default function MainPage() {
                             onClick={handleCanvasClick}
                             className="canvas"
                         />
-
                         <div className="controls">
                             <span>{points.length}/4 points placed</span>
-
                             <button
                                 onClick={submit}
                                 disabled={points.length !== 4 || loading || done}
                             >
-                                {loading ? "Cropping…" : "Crop Quadrat"}
+                                {loading ? "Cropping…" : "Crop and Analyze Quadrat"}
                             </button>
-
                             <button
                                 className="secondary"
                                 onClick={undoDot}
@@ -202,13 +234,12 @@ export default function MainPage() {
                                 <h4>Cropped Quadrat</h4>
                                 <img src={result.cropped} />
                             </div>
-
                             <div>
                                 <h4>Context Image</h4>
                                 <img src={result.context} />
                             </div>
                         </div>
-
+                        <h2>Results:</h2>
                         <ul className="results-list">
                             {result.results.display_list.map((item, i) => (
                                 <li key={i}>{item}</li>
@@ -216,9 +247,12 @@ export default function MainPage() {
                         </ul>
                     </div>
                 )}
-            </div>
+                <br></br><br></br>
+                {(image || result) && (
+                    <button className="secondary" onClick={refresh} disabled={loading}>Run Another Site</button>
+                )}
 
-            {/*<Table />*/}
+            </div>
         </div>
     );
 }

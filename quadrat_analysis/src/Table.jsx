@@ -20,7 +20,7 @@ export default function Table() {
         fetchData();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>Loading... <i>The model is currently running. Please wait a few minutes to view the table.</i></p>;
     if (!data.length) return <p>No data available</p>;
 
     const columns = Object.keys(data[0]);

@@ -58,7 +58,6 @@ context = ("You are an ecology field assistant trained in quadrat-based land cov
            "- For oysters, mussels, crab burrows, and periwinkles, provide COUNTS (not percent cover). These will only appear on bare ground or dead organic matter."
            "- If uncertain, choose the closest reasonable estimate."
            ""
-           "Spartina alterniflora has thicker, darker green blades and usually forms denser, upright stands. Spartina patens has finer, lighter-colored, and often wiry/matted blades."
            "Spartina alterniflora and Spartina patens may co-occur in the same site but typically one dominates if present."
            ""
            "Return ONLY valid JSON in this schema:"
