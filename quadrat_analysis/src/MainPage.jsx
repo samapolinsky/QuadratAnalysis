@@ -177,9 +177,10 @@ export default function MainPage(props) {
 
                 <div className="instructions">
                     <p>Use this app to analyze the land cover of quadrat images.</p>
-                    <p><strong>1.</strong> Upload an image.</p>
-                    <p><strong>2.</strong> Click to place 4 red dots on the inner corners of the quadrat. If you mess up, press <strong>Undo Last Dot</strong>. This will help the model identify the bounds of the quadrat.</p>
-                    <p><strong>3.</strong> Click <strong>Crop and Analyze Quadrat</strong> to run the model. Do not click to the table until the model has finished running.</p>
+                    <p><strong>1.</strong> Click on the <strong>Choose file</strong> button to upload an image.</p>
+                    <p><strong>2.</strong> Click to place 4 red dots on the corners of the quadrat. This will help the model identify the bounds of the quadrat. If you mess up, press <strong>Undo Last Dot</strong>.</p>
+                    <p><strong>3.</strong> Click <strong>Crop and Analyze Quadrat</strong> to run the model. Do not refresh the page until after the model has finished running.</p>
+                    <p><strong>4.</strong> Once the model is done running, a summary of the species it identified, the confidence levels, and any notes will be displayed at the bottom of the page. The site will also be added to the <strong>Results Table</strong> tab.</p>
                 </div>
 
                 <input
@@ -189,7 +190,7 @@ export default function MainPage(props) {
                     onChange={handleImageUpload}
                 />
 
-                {image && (
+                {image && !done && (
                     <div className="workspace">
                         <canvas
                             ref={canvasRef}
@@ -202,7 +203,7 @@ export default function MainPage(props) {
                                 onClick={submit}
                                 disabled={points.length !== 4 || loading || done}
                             >
-                                {loading ? "Cropping…" : "Crop and Analyze Quadrat"}
+                                {loading ? "Analyzing…" : "Crop and Analyze Quadrat"}
                             </button>
                             <button
                                 className="secondary"

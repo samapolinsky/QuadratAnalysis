@@ -149,7 +149,6 @@ button:disabled {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    white-space: nowrap;
 }
 
 .data-table th,
@@ -161,14 +160,24 @@ button:disabled {
 
 .data-table th {
     background: #f3f4f6;
-    font-weight: 600;
     position: sticky;
     top: 0;
     z-index: 1;
+    text-align: left;
+    padding: 6px 8px;
+}
+
+.data-table td {
+    padding: 4px 8px;
+    white-space: nowrap;
 }
 
 .data-table tbody tr:nth-child(even) {
-    background: #fafafa;
+    background: #ffffff;
+}
+
+.data-table tbody tr:nth-child(odd) {
+    background: #f3f4f6;
 }
 
 .data-table tbody tr:hover {

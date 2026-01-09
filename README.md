@@ -1,7 +1,8 @@
-# Quadrat Analysis Application
+# AI-powered Quadrat Land Cover Analysis App
 ## Project Overview
-This application was developed by Samantha Apolinsky with the Center for Coastal Resource Management (CCRM) at the Virginia Institute of Marine Science.
-The purpose of the application is to identify the percent cover of species in a quadrat -- a square frame used to isolate a unit of land. 
+The purpose of the application is to identify the percent cover of species in a quadrat -- a square frame used to isolate a unit of land. The application uses the OpenAI API and Python's OpenCV library to crop and analyze the quadrat image.
+
+This application was developed by Samantha Apolinsky with the help of members of the Center for Coastal Resource Management (CCRM) at the Virginia Institute of Marine Science (VIMS).
 ## Local Development Setup
 1. Clone the repository
 2. Create and activate a virtual environment
