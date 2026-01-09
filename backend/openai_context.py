@@ -101,7 +101,6 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
     file_exists = os.path.exists(csv_path)
 
     row = {"site": site_id}
-    row_to_ret = {"site": site_id}
 
     for species in SPECIES:
         pct_key = f"{species}_pct"
@@ -110,8 +109,6 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
         if species in json_data:
             row[pct_key] = json_data[species]["percent cover"]
             row[conf_key] = json_data[species]["confidence"]
-            row_to_ret[pct_key] = json_data[species]["percent cover"]
-            row_to_ret[conf_key] = json_data[species]["confidence"]
         else:
             row[pct_key] = 0
             row[conf_key] = 0
@@ -123,8 +120,6 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
         if other_species in json_data:
             row[count_key] = json_data[other_species]["count"]
             row[conf_key] = json_data[other_species]["confidence"]
-            row_to_ret[count_key] = json_data[other_species]["count"]
-            row_to_ret[conf_key] = json_data[other_species]["confidence"]
         else:
             row[count_key] = 0
             row[conf_key] = 0
@@ -132,8 +127,6 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
 
     row["Total_Confidence"] = json_data.get("Total Confidence", "")
     row["Notes"] = json_data.get("notes", "")
-    row_to_ret["Total_Confidence"] = json_data.get("Total Confidence", "")
-    row_to_ret["Notes"] = json_data.get("notes", "")
 
     fieldnames = ["site"]
     for species in SPECIES:
@@ -156,20 +149,19 @@ def append_quadrat_to_csv(json_data, site_id, csv_path="quadrat_data.csv"):
     for species in SPECIES:
         pct_key = f"{species}_pct"
         conf_key = f"{species}_conf"
-        if row_to_ret[pct_key] != 0:
-            return_list.append(f"{species}: {row_to_ret[pct_key]}%, Confidence: {row_to_ret[conf_key]}")
+        if row[pct_key] != 0:
+            return_list.append(f"{species}: {row[pct_key]}%, Confidence: {row[conf_key]}")
 
     for other_species in OTHER_SPECIES:
         ct_key = f"{other_species}_ct"
         conf_key = f"{other_species}_conf"
-        if row_to_ret[ct_key] != 0:
-            return_list.append(f"{other_species}: {row_to_ret[ct_key]}, Confidence: {row_to_ret[conf_key]}")
+        if row[ct_key] != 0:
+            return_list.append(f"{other_species}: {row[ct_key]}, Confidence: {row[conf_key]}")
 
-    return_list.append(f"Total Confidence: {row_to_ret["Total_Confidence"]}")
-    return_list.append(f"Notes: {row_to_ret["Notes"]}")
+    return_list.append(f"Total Confidence: {row["Total_Confidence"]}")
+    return_list.append(f"Notes: {row["Notes"]}")
 
     return {
-        "row_data": row_to_ret,   # raw data
         "display_list": return_list  # easy to render on frontend
     }
 

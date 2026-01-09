@@ -4,6 +4,7 @@ export default function Table() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // display the table containing all sites run previously
     useEffect(() => {
         const fetchData = async () => {
             try {

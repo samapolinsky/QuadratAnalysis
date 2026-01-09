@@ -26,7 +26,6 @@ async def crop_quadrat(image: UploadFile = File(...), points: str = Form(...), n
     crop_result = crop_quadrat_from_points(image_bytes, pts)
 
     ai_result = get_images_from_crop(crop_result["cropped_image"], crop_result["context_image"], name)
-    # print(ai_result)
 
     return {
         "cropped_image": base64.b64encode(crop_result["cropped_image"]).decode(),

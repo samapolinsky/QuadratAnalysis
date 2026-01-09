@@ -9,6 +9,7 @@ export default function MainPage(props) {
     const { session, setSession } = props;
     const { image, points, result, done, loading } = session;
 
+    // persist the current site if switching between Results Table tab
     useEffect(() => {
         if (!session.image) return;
 
@@ -76,25 +77,7 @@ export default function MainPage(props) {
         }));
     };
 
-    const redrawCanvas = (pointsArray) => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (imgRef.current) {
-            ctx.drawImage(imgRef.current, 0, 0);
-        }
-
-        // draw points
-        ctx.fillStyle = "red";
-        pointsArray.forEach(([x, y]) => {
-            ctx.beginPath();
-            ctx.arc(x, y, 6, 0, Math.PI * 2);
-            ctx.fill();
-        });
-    };
-
-    // handle click
+    // handle click (if user is drawing a dot)
     const handleCanvasClick = (e) => {
         if (!imgRef.current || points.length >= 4) return;
 
@@ -158,6 +141,7 @@ export default function MainPage(props) {
         }
     };
 
+    // refresh page to run a new site
     const refresh = () => {
         setSession({
             image: null,

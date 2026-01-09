@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import '../styles/Header.css'
 
+// basic header file with buttons for the main page and the results table
 const Header = () => {
     return (
         <header className="header">
